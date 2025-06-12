@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { auth } from "../firebase/firebase-config";
 
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import styles from "./LoginFormStyles"; // Relativ sökväg till LoginFormStyles, till skillnad från absoluta importer med alias @
 
 const LoginForm = () => {
@@ -27,10 +27,10 @@ const LoginForm = () => {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        router.push("/explore");
+        router.push("/home");
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-        router.push("/explore");
+        router.push("/home");
       }
     } catch {
       setError("Fel användarnamn eller lösenord");
@@ -41,7 +41,7 @@ const LoginForm = () => {
     <View style={styles.container}>
       <Text style={styles.title}>{isLogin ? "Logga in" : "Skapa konto"}</Text>
 
-      <Link href="/about">About</Link>
+      {/*       <Link href="/about">About</Link> */}
 
       <Text style={styles.label}>E-post</Text>
       <TextInput
