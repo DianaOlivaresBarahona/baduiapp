@@ -7,9 +7,11 @@ import {
   Text,
   View,
 } from "react-native";
+
 const PostsList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
   type Post = {
     id: number;
     title: string;
@@ -34,20 +36,25 @@ const PostsList = () => {
         setLoading(false);
       });
   }, []);
+
   if (loading) {
     return <ActivityIndicator size="large" color="#007AFF" />;
   }
+
   const renderItem = ({ item }: { item: Post }) => (
     <View style={styles.postContainer}>
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.body}>{item.body}</Text>
       <Text style={styles.tags}>Tags: {item.tags.join(", ")}</Text>
       <Text style={styles.meta}>
-        :+1: {item.reactions.likes} | :-1: {item.reactions.dislikes} | :eye:{" "}
+
+
+        👍 {item.reactions.likes} | 👎 {item.reactions.dislikes} | 👁️{" "}
         {item.views}
       </Text>
     </View>
   );
+
   return (
     <FlatList
       data={posts}
@@ -57,6 +64,7 @@ const PostsList = () => {
     />
   );
 };
+
 const styles = StyleSheet.create({
   list: {
     padding: 16,
@@ -64,6 +72,7 @@ const styles = StyleSheet.create({
   postContainer: {
     marginBottom: 20,
     backgroundColor: "#F4F4F4",
+
     padding: 16,
     borderRadius: 12,
   },
@@ -86,4 +95,5 @@ const styles = StyleSheet.create({
     color: "#999",
   },
 });
+
 export default PostsList;
