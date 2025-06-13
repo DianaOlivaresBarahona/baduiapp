@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -5,8 +7,6 @@ import {
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { auth } from "../firebase/firebase-config";
-
-import { useRouter } from "expo-router";
 import styles from "./LoginFormStyles"; // Relativ sökväg till LoginFormStyles, till skillnad från absoluta importer med alias @
 
 const LoginForm = () => {
@@ -27,10 +27,18 @@ const LoginForm = () => {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        router.push("/home");
+        router.replace("/onboarding");
+        return;
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-        router.push("/home");
+      }
+
+      const hasSeenOnboarding = await AsyncStorage.getItem("hasSeenOnboarding");
+
+      if (hasSeenOnboarding !== "true") {
+        router.replace("/onboarding");
+      } else {
+        router.replace("/home"); // Hoppa direkt till hemskärmen
       }
     } catch {
       setError("Fel användarnamn eller lösenord");
