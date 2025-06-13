@@ -1,11 +1,13 @@
-import { View } from "react-native";
+import { useRouter } from "expo-router";
+import { Button, Text, View } from "react-native";
 
-import LoginForm from "@/components/LoginForm"; // Absolut import med alias
+export default function Index() {
+  const router = useRouter();
 
-export default function HomeScreen() {
   return (
-    <View>
-      <LoginForm />
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Välkommen till appen!</Text>
+      <Button title="Logga in" onPress={() => router.push("/login")} />
     </View>
   );
 }

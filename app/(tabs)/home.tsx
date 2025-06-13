@@ -1,7 +1,9 @@
-import { StyleSheet, View } from "react-native";
+import { Text, View } from "react-native";
 
-export default function TabTwoScreen() {
-  return <View>Hem</View>;
+export default function HomeScreen() {
+  return (
+    <View>
+      <Text>Välkommen hem!</Text>
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({});
