@@ -1,33 +1,34 @@
-// Fallback for using MaterialIcons on Android and web.
-
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { SymbolViewProps, SymbolWeight } from "expo-symbols";
+import { SymbolWeight } from "expo-symbols";
 import { ComponentProps } from "react";
-import { OpaqueColorValue, type StyleProp, type TextStyle } from "react-native";
+import { OpaqueColorValue, StyleProp, TextStyle } from "react-native";
 
-type IconMapping = Record<
-  SymbolViewProps["name"],
+// Manuell lista över symboler du stödjer (så slipper vi problem med SFSymbols6_0)
+type IconSymbolName =
+  | "house.fill"
+  | "paperplane.fill"
+  | "chevron.left.forwardslash.chevron.right"
+  | "chevron.right"
+  | "person"
+  | "login.fill";
+
+// Mapping från dina SF-symbolnamn till MaterialIcons-namn
+const MAPPING: Record<
+  IconSymbolName,
   ComponentProps<typeof MaterialIcons>["name"]
->;
-type IconSymbolName = keyof typeof MAPPING;
-
-/**
- * Add your SF Symbols to Material Icons mappings here.
- * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
- * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
- */
-const MAPPING = {
+> = {
   "house.fill": "home",
   "paperplane.fill": "send",
   "chevron.left.forwardslash.chevron.right": "code",
   "chevron.right": "chevron-right",
   person: "person",
-} as IconMapping;
+  "login.fill": "login",
+};
 
 /**
- * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
- * This ensures a consistent look across platforms, and optimal resource usage.
- * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
+ * Ett ikonkomponent som använder SF Symbols på iOS (via expo-symbols)
+ * och Material Icons på Android/web. Du definierar vilka symboler som
+ * stöds manuellt i MAPPING.
  */
 export function IconSymbol({
   name,
@@ -41,11 +42,13 @@ export function IconSymbol({
   style?: StyleProp<TextStyle>;
   weight?: SymbolWeight;
 }) {
+  const iconName = MAPPING[name];
+
   return (
     <MaterialIcons
       color={color}
       size={size}
-      name={MAPPING[name]}
+      name={iconName ?? "help-outline"}
       style={style}
     />
   );

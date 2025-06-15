@@ -1,7 +1,9 @@
-import { StyleSheet, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function TabTwoScreen() {
-  return <View>Profil</View>;
+  return (
+    <View>
+      <Text>Profil</Text>
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({});

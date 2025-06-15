@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
   toggleTextWhite: {
     color: "white",
   },
+  toggleTextBlack: {
+    color: "Black",
+  },
   disabledButton: {
     backgroundColor: "gray",
     color: "white",

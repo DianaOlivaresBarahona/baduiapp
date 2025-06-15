@@ -1,7 +1,5 @@
-import { StyleSheet, View } from "react-native";
+import SettingsView from "@/components/SettingsView";
 
-export default function TabTwoScreen() {
-  return <View>Inställningar</View>;
+export default function settings() {
+  return <SettingsView />;
 }
-
-const styles = StyleSheet.create({});

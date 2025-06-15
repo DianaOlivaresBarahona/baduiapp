@@ -1,3 +1,5 @@
+import { useThemeToggle } from "@/context/ThemeContext";
+import { useRouter } from "expo-router";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -5,8 +7,6 @@ import {
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { auth } from "../firebase/firebase-config";
-
-import { useRouter } from "expo-router";
 import styles from "./LoginFormStyles"; // Relativ sökväg till LoginFormStyles, till skillnad från absoluta importer med alias @
 
 const LoginForm = () => {
@@ -17,6 +17,7 @@ const LoginForm = () => {
   const [error, setError] = useState("");
   const isFormValid = email.trim() !== "" && password.trim() !== "";
   const router = useRouter();
+  const { theme } = useThemeToggle();
 
   const handleSubmit = async () => {
     if (!isLogin && password !== confirmPassword) {
@@ -39,11 +40,13 @@ const LoginForm = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{isLogin ? "Logga in" : "Skapa konto"}</Text>
+      <Text style={{ color: theme.colors.text }}>
+        {isLogin ? "Logga in" : "Skapa konto"}
+      </Text>
 
       {/*       <Link href="/about">About</Link> */}
 
-      <Text style={styles.label}>E-post</Text>
+      <Text style={{ color: theme.colors.text }}>E-post</Text>
       <TextInput
         style={styles.input}
         keyboardType="email-address"
@@ -53,7 +56,7 @@ const LoginForm = () => {
         onChangeText={setEmail}
       />
 
-      <Text style={styles.label}>Lösenord</Text>
+      <Text style={{ color: theme.colors.text }}>Lösenord</Text>
       <TextInput
         style={styles.input}
         secureTextEntry
@@ -86,7 +89,7 @@ const LoginForm = () => {
       </TouchableOpacity>
 
       <View style={styles.toggleContainer}>
-        <Text style={styles.toggleTextWhite}>
+        <Text style={{ color: theme.colors.text }}>
           {isLogin ? "Har du inget konto?" : "Har du redan ett konto?"}
         </Text>
         <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
