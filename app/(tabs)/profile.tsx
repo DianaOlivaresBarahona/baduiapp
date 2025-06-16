@@ -1,10 +1,20 @@
+import ProfilePage from "@/components/ProfilePage";
+import UnhingedBackground from "@/components/UnhingedBackground";
 import React from "react";
-import ProfilePage from "../../components/ProfilePage";
+import { StyleSheet, View } from "react-native";
 
-export default function Profil() {
+export default function Profile() {
   return (
-    <>
+    <View style={styles.container}>
+      <UnhingedBackground />
       <ProfilePage />
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: "relative", // Viktigt för att absolut positionerade barn ska relatera till denna
+  },
+});
