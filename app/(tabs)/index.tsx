@@ -95,13 +95,12 @@ const styles = StyleSheet.create({
   },
   bouncer: {
     position: "absolute",
-    width: 60,
-    height: 20,
+    // Ta bort width & height så knappen får plats
   },
   button: {
-    borderRadius: 200,
-    paddingVertical: 24,
-    paddingHorizontal: 0.5,
+    width: 60,
+    height: 60,
+    borderRadius: 40, // hälften av width/height
     backgroundColor: "#D505F6",
     alignItems: "center",
     justifyContent: "center",
@@ -109,6 +108,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 10,
+    fontSize: 14,
   },
 });
