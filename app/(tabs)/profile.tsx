@@ -1,9 +1,6 @@
-import { Text, View } from "react-native";
+import React from "react";
+import ProfilePage from "../../components/ProfilePage";
 
-export default function TabTwoScreen() {
-  return (
-    <View>
-      <Text>Profil</Text>
-    </View>
-  );
+export default function Profil() {
+  return <ProfilePage />;
 }

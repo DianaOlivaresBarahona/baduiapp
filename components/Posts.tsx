@@ -47,6 +47,8 @@ const PostsList = () => {
       <Text style={styles.body}>{item.body}</Text>
       <Text style={styles.tags}>Tags: {item.tags.join(", ")}</Text>
       <Text style={styles.meta}>
+
+
         👍 {item.reactions.likes} | 👎 {item.reactions.dislikes} | 👁️{" "}
         {item.views}
       </Text>
@@ -69,7 +71,8 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     marginBottom: 20,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "#F4F4F4",
+
     padding: 16,
     borderRadius: 12,
   },

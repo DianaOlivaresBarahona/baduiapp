@@ -1,4 +1,5 @@
 import { useThemeToggle } from "@/context/ThemeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import {
   createUserWithEmailAndPassword,
@@ -28,10 +29,18 @@ const LoginForm = () => {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        router.push("/home");
+        router.replace("/onboarding");
+        return;
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-        router.push("/home");
+      }
+
+      const hasSeenOnboarding = await AsyncStorage.getItem("hasSeenOnboarding");
+
+      if (hasSeenOnboarding !== "true") {
+        router.replace("/onboarding");
+      } else {
+        router.replace("/home"); // Hoppa direkt till hemskärmen
       }
     } catch {
       setError("Fel användarnamn eller lösenord");
