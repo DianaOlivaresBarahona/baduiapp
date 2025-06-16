@@ -37,7 +37,7 @@ export default function UnhingedBackground() {
             duration: 2000 + Math.random() * 2000,
             useNativeDriver: true,
           }),
-        ]).start(() => loopAnim());
+        ]).start(loopAnim);
       };
 
       loopAnim();
@@ -45,11 +45,15 @@ export default function UnhingedBackground() {
   }, []);
 
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <View
+      pointerEvents="none"
+      style={[StyleSheet.absoluteFill, { zIndex: 0 }]} // INTE -1
+    >
       {animatedValues.map(({ x, y, rotate }, index) => {
         const spin = rotate.interpolate({
           inputRange: [0, 360],
           outputRange: ["0deg", "360deg"],
+          extrapolate: "extend",
         });
 
         return (

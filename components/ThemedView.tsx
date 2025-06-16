@@ -1,4 +1,4 @@
-/* import { useThemeToggle } from "@/context/ThemeContext";
+import { useThemeToggle } from "@/context/ThemeContext";
 import { View, type ViewProps } from "react-native";
 
 export type ThemedViewProps = ViewProps & {
@@ -16,4 +16,4 @@ export function ThemedView({
   const backgroundColor = theme.colors.background;
 
   return <View style={[{ backgroundColor }, style]} {...otherProps} />;
-} */
+}
