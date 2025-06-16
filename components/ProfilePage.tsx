@@ -4,9 +4,11 @@ import {
   updateProfile,
   User,
 } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Animated,
+  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -14,13 +16,40 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth } from "../firebase/firebase-config"; // Justera sökväg om det behövs
+import { auth } from "../firebase/firebase-config";
+
+const { width, height } = Dimensions.get("window");
+const bgColors = ["#ffffff", "#ffe6e6", "#e6ffe6", "#e6f0ff", "#fff9e6"];
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [displayName, setDisplayName] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [loading, setLoading] = useState(false);
+  const [buttonX, setButtonX] = useState(100);
+  const [buttonY, setButtonY] = useState(500);
+  const [clicks, setClicks] = useState(0);
+
+  const bgColorAnim = useRef(new Animated.Value(0)).current;
+  const twitchAnim = useRef(new Animated.Value(0)).current;
+
+  const moveButtonRandomly = () => {
+    const randomX = Math.floor(Math.random() * (width - 150));
+    const randomY = Math.floor(Math.random() * (height - 250)) + 150;
+    setButtonX(randomX);
+    setButtonY(randomY);
+  };
+
+  const handleButtonPress = async () => {
+    const newCount = clicks + 1;
+    setClicks(newCount);
+    moveButtonRandomly();
+
+    if (newCount >= 5) {
+      setClicks(0);
+      await handleSave();
+    }
+  };
 
   const handleSave = async () => {
     const auth = getAuth();
@@ -31,21 +60,18 @@ export default function ProfilePage() {
         displayName,
         photoURL: profilePicture,
       });
-      auth.currentUser?.reload();
+      await auth.currentUser?.reload();
       setLoading(false);
-      Alert.alert("Profil uppdaterad!");
+      Alert.alert("🎉 Profil uppdaterad efter 5 träffar!");
     } catch (error) {
       console.error(error);
       Alert.alert("Fel vid uppdatering");
     }
   };
 
-  // Hämta användare och instagram-länk från Firebase
   useEffect(() => {
-    setLoading(true);
     onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        console.log(firebaseUser);
         setUser(firebaseUser);
         setDisplayName(firebaseUser.displayName || "");
         setProfilePicture(firebaseUser.photoURL || "");
@@ -53,6 +79,54 @@ export default function ProfilePage() {
       }
     });
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(moveButtonRandomly, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Animate background color
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence(
+        bgColors.map((_, index) =>
+          Animated.timing(bgColorAnim, {
+            toValue: index,
+            duration: 1200,
+            useNativeDriver: false,
+          })
+        )
+      )
+    ).start();
+  }, [bgColorAnim]);
+
+  // Animate twitch motion
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(twitchAnim, {
+          toValue: 5,
+          duration: 80,
+          useNativeDriver: true,
+        }),
+        Animated.timing(twitchAnim, {
+          toValue: -5,
+          duration: 80,
+          useNativeDriver: true,
+        }),
+        Animated.timing(twitchAnim, {
+          toValue: 0,
+          duration: 80,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [twitchAnim]);
+
+  const backgroundColor = bgColorAnim.interpolate({
+    inputRange: bgColors.map((_, i) => i),
+    outputRange: bgColors,
+  });
 
   if (loading) {
     return (
@@ -70,47 +144,61 @@ export default function ProfilePage() {
     );
   }
 
-  // const profilePic =
-  //  user.photoURL || "https://randomuser.me/api/portraits/lego/1.jpg";
-
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { backgroundColor }]}>
       <Text>Hej {user.displayName}</Text>
       <Image source={{ uri: user.photoURL || "" }} style={styles.profilePic} />
 
-      <TextInput
-        style={styles.input}
-        value={displayName}
-        onChangeText={setDisplayName}
-        placeholder="Ditt fullständiga namn"
-      />
+      <Animated.View style={{ transform: [{ translateX: twitchAnim }] }}>
+        <TextInput
+          style={styles.input}
+          value={displayName}
+          onChangeText={setDisplayName}
+          placeholder="Ditt fullständiga namn"
+        />
+      </Animated.View>
 
-      <TextInput
-        style={styles.input}
-        value={profilePicture}
-        onChangeText={setProfilePicture}
-        placeholder="Bild Url"
-      />
+      <Animated.View style={{ transform: [{ translateX: twitchAnim }] }}>
+        <TextInput
+          style={styles.input}
+          value={profilePicture}
+          onChangeText={setProfilePicture}
+          placeholder="Bild Url"
+        />
+      </Animated.View>
 
-      <TouchableOpacity style={styles.editButton} onPress={handleSave}>
-        <Text style={styles.editButtonText}>Spara ändringar</Text>
+      <Text style={styles.counterText}>
+        🎯 Fånga knappen för att spara ändringar ({clicks} / 5)
+      </Text>
+
+      <TouchableOpacity
+        style={[
+          styles.editButton,
+          { position: "absolute", left: buttonX, top: buttonY },
+        ]}
+        onPress={handleButtonPress}
+      >
+        <Text style={styles.editButtonText}>🎯 Fånga mig!</Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 100,
+    paddingTop: 80,
     alignItems: "center",
-    backgroundColor: "#fff",
     flex: 1,
   },
   profilePic: {
     width: 120,
     height: 120,
+    borderWidth: 1,
+    borderColor: "#000",
     borderRadius: 60,
-    marginBottom: 15,
+    marginBottom: 55,
+    marginTop: 55,
+    backgroundColor: "#ddd",
   },
   input: {
     width: "80%",
@@ -119,27 +207,21 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     marginBottom: 10,
-  },
-  socialLinks: {
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "80%",
-    marginBottom: 30,
-  },
-  socialText: {
-    color: "#1E90FF",
-    fontSize: 16,
-    marginHorizontal: 10,
-    textDecorationLine: "underline",
+    backgroundColor: "#fff",
   },
   editButton: {
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#28a745",
     paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+    paddingHorizontal: 25,
+    borderRadius: 30,
+    elevation: 4,
   },
   editButtonText: {
     color: "white",
+    fontSize: 16,
+  },
+  counterText: {
+    marginTop: 10,
     fontSize: 16,
   },
 });
