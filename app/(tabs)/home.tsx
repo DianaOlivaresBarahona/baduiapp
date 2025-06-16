@@ -1,14 +1,14 @@
 import PostsList from "@/components/Posts";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { StyleSheet } from "react-native";
+import { useThemeToggle } from "@/context/ThemeContext";
+import { StyleSheet, Text } from "react-native";
 
 export default function HomeScreen() {
+   const { theme } = useThemeToggle();
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="defaultSemiBold">Hem</ThemedText>
+    <>
+      <Text style={{ color: theme.colors.text }}>Hem</Text>
       <PostsList />
-    </ThemedView>
+    </>
   );
 }
 

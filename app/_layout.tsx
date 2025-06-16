@@ -1,10 +1,21 @@
-import { Stack } from "expo-router";
-import "react-native-reanimated";
+import { ThemeProvider, useThemeToggle } from "@/context/ThemeContext";
+import { ThemeProvider as NavigationThemeProvider } from "@react-navigation/native";
+import { Slot } from "expo-router";
+
+function InnerLayout() {
+  const { theme } = useThemeToggle();
+
+  return (
+    <NavigationThemeProvider value={theme.navigation}>
+      <Slot />
+    </NavigationThemeProvider>
+  );
+}
 
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <ThemeProvider>
+      <InnerLayout />
+    </ThemeProvider>
   );
 }

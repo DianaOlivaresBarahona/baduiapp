@@ -1,8 +1,7 @@
-import { Tabs } from "expo-router";
-import React from "react";
-
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Tabs } from "expo-router";
+import React from "react";
 
 export default function TabLayout() {
   return (
@@ -15,6 +14,9 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Log In",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="login.fill" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
