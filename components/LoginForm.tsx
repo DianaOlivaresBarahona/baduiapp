@@ -5,10 +5,22 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Easing,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { auth } from "../firebase/firebase-config";
-import styles from "./LoginFormStyles"; // Relativ sökväg till LoginFormStyles, till skillnad från absoluta importer med alias @
+import { styles } from "./LoginFormStyles";
+
+const glitchColors = ["#FF00FF", "#00FFFF", "#FF3300", "#00FF33"];
+
+const getRandomGlitchColor = () =>
+  glitchColors[Math.floor(Math.random() * glitchColors.length)];
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -16,9 +28,84 @@ const LoginForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
-  const isFormValid = email.trim() !== "" && password.trim() !== "";
+
   const router = useRouter();
   const { theme } = useThemeToggle();
+
+  const isFormValid = email.trim() !== "" && password.trim() !== "";
+
+  // Animated values
+  const glitchAnim = useRef(new Animated.Value(0)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const blinkOpacity = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    // Glitch color cycling
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glitchAnim, {
+          toValue: 1,
+          duration: 100,
+          useNativeDriver: false,
+          easing: Easing.linear,
+        }),
+        Animated.timing(glitchAnim, {
+          toValue: 0,
+          duration: 100,
+          useNativeDriver: false,
+          easing: Easing.linear,
+        }),
+      ])
+    ).start();
+
+    // Rotate inputs
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 50,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+        Animated.timing(rotateAnim, {
+          toValue: 0,
+          duration: 50,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+      ])
+    ).start();
+
+    // Blink button opacity
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(blinkOpacity, {
+          toValue: 0.1,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+        Animated.timing(blinkOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+      ])
+    ).start();
+  }, [glitchAnim, rotateAnim, blinkOpacity]);
+
+  // Interpolate glitch color for labels
+  const glitchColor = glitchAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["#00FFAA", getRandomGlitchColor()],
+  });
+
+  // Interpolate rotation for inputs
+  const rotate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "5deg"],
+  });
 
   const handleSubmit = async () => {
     if (!isLogin && password !== confirmPassword) {
@@ -40,7 +127,7 @@ const LoginForm = () => {
       if (hasSeenOnboarding !== "true") {
         router.replace("/onboarding");
       } else {
-        router.replace("/home"); // Hoppa direkt till hemskärmen
+        router.replace("/home");
       }
     } catch {
       setError("Fel användarnamn eller lösenord");
@@ -49,61 +136,76 @@ const LoginForm = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ color: theme.colors.text }}>
-        {isLogin ? "Logga in" : "Skapa konto"}
-      </Text>
+      <Text style={styles.title}>{isLogin ? "Logga in" : "Skapa konto"}</Text>
 
-      {/*       <Link href="/about">About</Link> */}
+      <Animated.Text style={[styles.label, { color: glitchColor }]}>
+        E-post
+      </Animated.Text>
+      <Animated.View style={{ transform: [{ rotate }] }}>
+        <TextInput
+          style={styles.input}
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          autoCorrect={false}
+          placeholder="Din e-post"
+          placeholderTextColor="#888"
+        />
+      </Animated.View>
 
-      <Text style={{ color: theme.colors.text }}>E-post</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="email-address"
-        value={email}
-        // React Native's TextInput använder onChangeText som direkt skickar in sträng-värdet från inputen
-        // till skillnad från web React där du behöver extrahera strängen via event.target.value.
-        onChangeText={setEmail}
-      />
-
-      <Text style={{ color: theme.colors.text }}>Lösenord</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+      <Animated.Text style={[styles.label, { color: glitchColor }]}>
+        Lösenord
+      </Animated.Text>
+      <Animated.View style={{ transform: [{ rotate }] }}>
+        <TextInput
+          style={styles.input}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Din lösenord"
+          placeholderTextColor="#888"
+        />
+      </Animated.View>
 
       {!isLogin && (
         <>
-          <Text style={styles.label}>Bekräfta lösenord</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
+          <Animated.Text style={[styles.label, { color: glitchColor }]}>
+            Bekräfta lösenord
+          </Animated.Text>
+          <Animated.View style={{ transform: [{ rotate }] }}>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholder="Bekräfta lösenord"
+              placeholderTextColor="#888"
+            />
+          </Animated.View>
         </>
       )}
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {!!error && <Text style={styles.error}>{error}</Text>}
 
-      <TouchableOpacity
-        style={[styles.button, !isFormValid && styles.disabledButton]}
-        onPress={handleSubmit}
-        disabled={!isFormValid}
-      >
-        <Text style={styles.buttonText}>
-          {isLogin ? "Logga in" : "Registrera"}
-        </Text>
-      </TouchableOpacity>
+      <Animated.View style={{ opacity: blinkOpacity }}>
+        <TouchableOpacity
+          style={[styles.button, !isFormValid && { backgroundColor: "#555" }]}
+          onPress={handleSubmit}
+          disabled={!isFormValid}
+        >
+          <Text style={styles.buttonText}>
+            {isLogin ? "Logga in" : "Registrera"}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
 
       <View style={styles.toggleContainer}>
-        <Text style={{ color: theme.colors.text }}>
-          {isLogin ? "Har du inget konto?" : "Har du redan ett konto?"}
-        </Text>
         <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
           <Text style={styles.toggleText}>
-            {isLogin ? "Registrera dig här" : "Logga in här"}
+            {isLogin
+              ? "Har du inget konto? Registrera dig här"
+              : "Har du redan ett konto? Logga in här"}
           </Text>
         </TouchableOpacity>
       </View>

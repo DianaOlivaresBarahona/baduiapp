@@ -1,59 +1,77 @@
 import { StyleSheet } from "react-native";
 
-// Enheten som används i Stylesheet.create i React Native är dp eller dip (density-independent pixels).
-// Det är ett abstrakt mått som fungerar oavsett skärmupplösning eller pixeltäthet.
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    flex: 1,
+    backgroundColor: "#b8f2eb",
+    justifyContent: "center",
+    padding: 30,
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 42,
+    fontWeight: "900",
+    textAlign: "center",
+    color: "#f707c7",
+    textShadowColor: "#b8f2eb",
+    textShadowRadius: 10,
+    marginBottom: 40,
   },
   label: {
-    marginTop: 10,
-    marginBottom: 5,
+    color: "#b8f2eb",
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 6,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "#2ae880",
+    backgroundColor: "#e82ab5",
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 20,
+    padding: 12,
+    marginBottom: 25,
+    borderRadius: 12,
+    // placeholder will be weird handled in component via Animated
   },
   button: {
-    backgroundColor: "#007AFF",
-    padding: 15,
-    marginTop: 20,
-    borderRadius: 5,
+    backgroundColor: "#00FF00",
+    padding: 20,
+    borderRadius: 30,
     alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#FF00FF",
+    shadowColor: "#FF00FF",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9,
+    shadowRadius: 20,
   },
   buttonText: {
-    color: "white",
-    fontWeight: "bold",
+    fontSize: 28,
+    fontWeight: "900",
+    color: "#e82ab5",
+    textShadowColor: "#e82ab5",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 8,
   },
   toggleContainer: {
     flexDirection: "row",
-    marginTop: 20,
     justifyContent: "center",
+    marginTop: 35,
   },
   toggleText: {
-    color: "#007AFF",
-    paddingLeft: 5,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FF33CC",
+    textDecorationLine: "underline",
   },
   error: {
-    marginTop: 10,
-    color: "red",
-  },
-  toggleTextWhite: {
-    color: "white",
-  },
-  toggleTextBlack: {
-    color: "Black",
-  },
-  disabledButton: {
-    backgroundColor: "gray",
-    color: "white",
+    marginTop: 15,
+    color: "#FF0033",
+    fontWeight: "900",
+    fontSize: 18,
+    textAlign: "center",
+    textShadowColor: "#AA0000",
+    textShadowRadius: 8,
   },
 });
-
-export default styles;
