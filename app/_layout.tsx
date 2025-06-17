@@ -1,4 +1,5 @@
 import UnhingedBackground from "@/components/UnhingedBackground";
+import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider, useThemeToggle } from "@/context/ThemeContext";
 import { ThemeProvider as NavigationThemeProvider } from "@react-navigation/native";
 import { Slot } from "expo-router";
@@ -20,7 +21,9 @@ function InnerLayout() {
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <InnerLayout />
+      <AuthProvider>
+        <InnerLayout />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
