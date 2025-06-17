@@ -1,9 +1,23 @@
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { useAuth } from "@/context/AuthContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export default function TabLayout() {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleAuthPress = async () => {
+    if (user) {
+      await logout();
+      router.replace("/"); // Go back to index after logout
+    } else {
+      router.push("/"); // Also go to index to hit the bouncing login button
+    }
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -13,9 +27,24 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Log In",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="login.fill" color={color} />
+          tabBarButton: (props) => (
+            <TouchableOpacity {...props} onPress={handleAuthPress}>
+              <View style={{ alignItems: "center", justifyContent: "center" }}>
+                <IconSymbol
+                  size={28}
+                  name={user ? "logout" : "login.fill"}
+                  color={props.accessibilityState?.selected ? "blue" : "gray"}
+                />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: props.accessibilityState?.selected ? "blue" : "gray",
+                  }}
+                >
+                  {user ? "Log Out" : "Log In"}
+                </Text>
+              </View>
+            </TouchableOpacity>
           ),
         }}
       />
