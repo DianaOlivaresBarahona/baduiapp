@@ -19,8 +19,6 @@ export default function Index() {
   const y = useRef(new Animated.Value(0)).current;
   const xDir = useRef(1);
   const yDir = useRef(1);
-
-  // Egen referens för aktuell position (utan __getValue())
   const posX = useRef(0);
   const posY = useRef(0);
 
@@ -65,7 +63,6 @@ export default function Index() {
         <Text style={styles.text}>Välkommen till appen!</Text>
       </View>
 
-      {/* Studsande Login-knapp */}
       <Animated.View
         style={[
           styles.bouncer,
@@ -95,12 +92,11 @@ const styles = StyleSheet.create({
   },
   bouncer: {
     position: "absolute",
-    // Ta bort width & height så knappen får plats
   },
   button: {
     width: 60,
     height: 60,
-    borderRadius: 40, // hälften av width/height
+    borderRadius: 40,
     backgroundColor: "#D505F6",
     alignItems: "center",
     justifyContent: "center",

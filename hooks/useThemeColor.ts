@@ -1,4 +1,3 @@
-// hooks/useThemeColor.ts
 import { useThemeToggle } from "@/context/ThemeContext";
 
 export function useThemeColor(

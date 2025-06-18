@@ -3,16 +3,15 @@ import { SymbolWeight } from "expo-symbols";
 import { ComponentProps } from "react";
 import { OpaqueColorValue, StyleProp, TextStyle } from "react-native";
 
-// Manuell lista över symboler du stödjer (så slipper vi problem med SFSymbols6_0)
 type IconSymbolName =
   | "house.fill"
   | "paperplane.fill"
   | "chevron.left.forwardslash.chevron.right"
   | "chevron.right"
   | "person"
-  | "login.fill";
+  | "login.fill"
+  | "logout";
 
-// Mapping från dina SF-symbolnamn till MaterialIcons-namn
 const MAPPING: Record<
   IconSymbolName,
   ComponentProps<typeof MaterialIcons>["name"]
@@ -23,13 +22,9 @@ const MAPPING: Record<
   "chevron.right": "chevron-right",
   person: "person",
   "login.fill": "login",
+  logout: "logout",
 };
 
-/**
- * Ett ikonkomponent som använder SF Symbols på iOS (via expo-symbols)
- * och Material Icons på Android/web. Du definierar vilka symboler som
- * stöds manuellt i MAPPING.
- */
 export function IconSymbol({
   name,
   size = 24,

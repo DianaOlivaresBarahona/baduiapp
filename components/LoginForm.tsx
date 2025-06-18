@@ -9,13 +9,13 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { auth } from "../firebase/firebase-config";
-import { styles } from "./LoginFormStyles";
 
 const glitchColors = ["#FF00FF", "#00FFFF", "#FF3300", "#00FF33"];
 
@@ -34,13 +34,11 @@ const LoginForm = () => {
 
   const isFormValid = email.trim() !== "" && password.trim() !== "";
 
-  // Animated values
   const glitchAnim = useRef(new Animated.Value(0)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const blinkOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    // Glitch color cycling
     Animated.loop(
       Animated.sequence([
         Animated.timing(glitchAnim, {
@@ -58,7 +56,6 @@ const LoginForm = () => {
       ])
     ).start();
 
-    // Rotate inputs
     Animated.loop(
       Animated.sequence([
         Animated.timing(rotateAnim, {
@@ -76,7 +73,6 @@ const LoginForm = () => {
       ])
     ).start();
 
-    // Blink button opacity
     Animated.loop(
       Animated.sequence([
         Animated.timing(blinkOpacity, {
@@ -95,13 +91,11 @@ const LoginForm = () => {
     ).start();
   }, [glitchAnim, rotateAnim, blinkOpacity]);
 
-  // Interpolate glitch color for labels
   const glitchColor = glitchAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ["#00FFAA", getRandomGlitchColor()],
   });
 
-  // Interpolate rotation for inputs
   const rotate = rotateAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "5deg"],
@@ -212,5 +206,80 @@ const LoginForm = () => {
     </View>
   );
 };
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#b8f2eb",
+    justifyContent: "center",
+    padding: 30,
+  },
+  title: {
+    fontSize: 42,
+    fontWeight: "900",
+    textAlign: "center",
+    color: "#f707c7",
+    textShadowColor: "#b8f2eb",
+    textShadowRadius: 10,
+    marginBottom: 40,
+  },
+  label: {
+    color: "#b8f2eb",
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 6,
+  },
+  input: {
+    borderWidth: 2,
+    borderColor: "#2ae880",
+    backgroundColor: "#e82ab5",
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 20,
+    padding: 12,
+    marginBottom: 25,
+    borderRadius: 12,
+  },
+  button: {
+    backgroundColor: "#00FF00",
+    padding: 20,
+    borderRadius: 30,
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#FF00FF",
+    shadowColor: "#FF00FF",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9,
+    shadowRadius: 20,
+  },
+  buttonText: {
+    fontSize: 28,
+    fontWeight: "900",
+    color: "#e82ab5",
+    textShadowColor: "#e82ab5",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 8,
+  },
+  toggleContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 35,
+  },
+  toggleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FF33CC",
+    textDecorationLine: "underline",
+  },
+  error: {
+    marginTop: 15,
+    color: "#FF0033",
+    fontWeight: "900",
+    fontSize: 18,
+    textAlign: "center",
+    textShadowColor: "#AA0000",
+    textShadowRadius: 8,
+  },
+});
 
 export default LoginForm;

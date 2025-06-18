@@ -12,7 +12,7 @@ export default function TabLayout() {
   const handleAuthPress = async () => {
     if (user) {
       await logout();
-      router.replace("/"); // Go back to index after logout
+      router.replace("/");
     } else {
       router.push("/"); // Also go to index to hit the bouncing login button
     }
@@ -27,20 +27,15 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          tabBarButton: (props) => (
-            <TouchableOpacity {...props} onPress={handleAuthPress}>
+          tabBarButton: () => (
+            <TouchableOpacity onPress={handleAuthPress}>
               <View style={{ alignItems: "center", justifyContent: "center" }}>
                 <IconSymbol
                   size={28}
                   name={user ? "logout" : "login.fill"}
-                  color={props.accessibilityState?.selected ? "blue" : "gray"}
+                  color={user ? "blue" : "gray"}
                 />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: props.accessibilityState?.selected ? "blue" : "gray",
-                  }}
-                >
+                <Text style={{ fontSize: 12, color: user ? "blue" : "gray" }}>
                   {user ? "Log Out" : "Log In"}
                 </Text>
               </View>

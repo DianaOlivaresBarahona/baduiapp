@@ -12,7 +12,6 @@ type ThemeColors = {
   border: string;
   notification: string;
   button: string;
-  // Lägg till fler om du vill, t.ex. button, link, etc.
 };
 
 export type AppTheme = {

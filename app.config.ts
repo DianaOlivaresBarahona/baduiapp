@@ -1,7 +1,6 @@
 import "dotenv/config";
-import { ExpoConfig, ConfigContext } from "expo/config";
+import { ConfigContext, ExpoConfig } from "expo/config";
 
-// Vår egen typ som använder sig av en typ från expo/config
 export interface CustomExpoConfig extends Partial<ExpoConfig> {
   extra: {
     firebaseApiKey: string | undefined;

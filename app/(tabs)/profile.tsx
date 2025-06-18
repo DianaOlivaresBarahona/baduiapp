@@ -15,6 +15,6 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative", // Viktigt för att absolut positionerade barn ska relatera till denna
+    position: "relative",
   },
 });
